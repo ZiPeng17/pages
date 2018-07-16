@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简历编辑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="js/vue.min.js"></script>
+    <link rel="stylesheet" href="css/iosSelect.css">
+    <script type="text/javascript" src="js/iosSelect.js"></script>
+    <style type="text/css">
+        input {
+            outline: none;
+            border: none;
+        }
+        input:focus {
+            outline: none;
+            border: none;
+        }
+        .flex-between {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user {
+            margin: 0 15px;
+            padding: 17px 5px;
+            border-bottom: 1px solid #dcdcdc;
+        }
+        .head-img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+        .user-detail {
+            font-size: 15px;
+            color: #979797;
+            font-weight: 300;
+        }
+
+        .list0 {
+            height: 51px;
+            padding: 0 16px;
+            font-weight: 300;
+        }
+        .list {
+            height: 38px;
+            padding: 0 16px;
+            font-weight: 300;
+        }
+        .list .text {
+            color: #6a6a6a;
+            font-size: 15px;
+            line-height: 1;
+        }
+        .list .content {
+            color: #5077aa;
+            font-size: 12px;
+            text-align: right;
+            max-width: 130px;
+        }
+        .red-dotted {
+            width: 2px;
+            height: 2px;
+            display: inline-block;
+            background: red;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        .list .content::-webkit-input-placeholder { /* WebKit browsers */
+            color: #5077aa;
+            font-weight: 300;
+        }
+        .list .content:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+            color: #5077aa;
+            font-weight: 300;
+        }
+        .list .content::-moz-placeholder { /* Mozilla Firefox 19+ */
+            color: #5077aa;
+            font-weight: 300;
+        }
+        .list .content:-ms-input-placeholder { /* Internet Explorer 10+ */
+            color: #5077aa;
+            font-weight: 300;
+        }
+        .arrow {
+            width: 7px;
+            height: 11px;
+            margin-left: 8px;
+            transition: 500ms;
+            transform: rotate(0deg);
+        }
+        .rotate90 {
+            transition: 500ms;
+            transform: rotate(90deg);
+        }
+        .classify {
+            background: #f3f3f3;
+            height: 25px;
+            padding: 0 16px;
+            color: #999;
+        }
+        .add-cont {
+            color: #5077aa;
+            font-size: 12px;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .save {
+            padding: 11px 25px;
+        }
+        .save-btn {
+            height: 38px;
+            line-height: 38px;
+            text-align: center;
+            background-color: #6296db;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .gray {
+            height: 48px;
+            background-color: #f3f3f3;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="user">
+            <div class="user-info flex-between">
+                <div class="flex-between">
+                    <img :src="userInfo.head_img" class="head-img" alt="头像">
+                    <div class="user-detail">
+                        <div>{{userInfo.name}}&nbsp;&nbsp;{{userInfo.sex}}</div>
+                        <div>{{userInfo.info}}</div>
+                    </div>
+                </div>
+                <img :src="arrow" class="arrow" alt="">
+            </div>
+        </div>
+
+        <div class="list0 flex-between">
+            <span>修改实名认证</span>
+            <img :src="arrow" class="arrow" alt="">
+        </div>
+
+        <div class="classify flex-between" @click="showOrHide(1)">
+            <span>个人情况</span>
+            <img :src="arrow" :class="[show1 ? 'arrow' : 'rotate90 arrow']" alt="">
+        </div>
+        <div v-show="show1">
+            <div class="list flex-between">
+                <span>身高(CM)</span>
+                <input type="number" placeholder="请输入" class="content">
+            </div>
+            <div class="list flex-between">
+                <span>体重(KG)</span>
+                <input type="number" placeholder="请输入" class="content">
+            </div>
+            <div class="list flex-between" @click="select(1)">
+                <span>婚姻状态</span>
+                <span class="content">{{isMarry.value}}</span>
+            </div>
+            <div class="list flex-between" @click="select(2)">
+                <span>最高学历</span>
+                <span class="content">{{maxEducation.value}}</span>
+            </div>
+            <div class="list flex-between">
+                <span>技能特长</span>
+                <div class="flex-between">
+                    <span class="content">标签</span>
+                    <img :src="arrow" class="arrow" alt="">
+                </div>
+            </div>
+            <div class="list flex-between" @click="select(3)">
+                <span>政治面貌</span>
+                <span class="content">{{politicalOutlook.value}}</span>
+            </div>
+            <div class="list flex-between">
+                <span>紧急联系人</span>
+                <input type="text" placeholder="请输入" class="content">
+            </div>
+            <div class="list flex-between">
+                <span>紧急联系电话</span>
+                <input type="number" placeholder="请输入" class="content">
+            </div>
+            <div class="list flex-between">
+                <span>现住址</span>
+                <input type="text" placeholder="请输入" class="content">
+            </div>
+        </div>
+
+        <div class="classify flex-between" @click="showOrHide(2)">
+            <span>相关证件</span>
+            <img :src="arrow" :class="[show2 ? 'arrow' : 'rotate90 arrow']" alt="">
+        </div>
+        <div v-show="show2">
+            <div class="list flex-between">
+                <span>免冠半身照</span>
+                <div class="flex-between">
+                    <span class="content"><span class="red-dotted"></span>未上传</span>
+                    <img :src="arrow" class="arrow" alt="">
+                </div>
+            </div>
+            <div class="list flex-between">
+                <span>免冠全身照</span>
+                <div class="flex-between">
+                    <span class="content"><span class="red-dotted"></span>未上传</span>
+                    <img :src="arrow" class="arrow" alt="">
+                </div>
+            </div>
+            <div class="list flex-between">
+                <span>健康证上传</span>
+                <div class="flex-between">
+                    <span class="content">已上传1张</span>
+                    <img :src="arrow" class="arrow" alt="">
+                </div>
+            </div>
+            <div class="list flex-between">
+                <span>证书/成绩证明</span>
+                <div class="flex-between">
+                    <span class="content">已上传1张</span>
+                    <img :src="arrow" class="arrow" alt="">
+                </div>
+            </div>
+        </div>
+
+        <div class="classify flex-between" @click="showOrHide(3)">
+            <span>工作经验</span>
+            <img :src="arrow" :class="[show3 ? 'arrow' : 'rotate90 arrow']" alt="">
+        </div>
+        <div v-show="show3">
+            <div class="list flex-between">
+                <span class="content">xxx保安公司</span>
+                <div class="flex-between">
+                    <span class="content">2016.10-2017.10</span>
+                    <img :src="arrow" alt="" class="arrow">
+                </div>
+            </div>
+            <div class="add-cont">+ 添加工作经验</div>
+        </div>
+
+        <div class="classify flex-between" @click="showOrHide(4)">
+            <span>教育经历</span>
+            <img :src="arrow" :class="[show4 ? 'arrow' : 'rotate90 arrow']" alt="">
+        </div>
+        <div v-show="show4">
+            <div class="list flex-between">
+                <span class="content">xxx职业高中</span>
+                <div class="flex-between">
+                    <span class="content">2016.10-2017.10</span>
+                    <img :src="arrow" alt="" class="arrow">
+                </div>
+            </div>
+            <div class="list flex-between">
+                <span class="content">xxx技术学校</span>
+                <div class="flex-between">
+                    <span class="content">2016.10-2017.10</span>
+                    <img :src="arrow" alt="" class="arrow">
+                </div>
+            </div>
+            <div class="add-cont">+ 添加教育经历</div>
+        </div>
+
+        <div class="gray"></div>
+
+        <div class="save">
+            <div class="save-btn">保存</div>
+        </div>
+
+        <div class="container" v-show="show_container"></div>
+        
+        
+    </div>
+    <script>
+        window.onload=function(){
+            new Vue({
+                el:'#app',
+                data:{
+                    userInfo: {
+                        head_img: './images/headimg.jpg',
+                        name: '张大炮',
+                        sex: '男',
+                        info: '查看基础信息'
+                    },
+                    arrow: './images/arrow.jpg',
+                    show1: true,
+                    show2: true,
+                    show3: true,
+                    show4: true,
+                    isMarry: { id: '1', value: '未婚' },
+                    maxEducation: { id: '3', value: '本科' },
+                    politicalOutlook: { id: '3', value: '群众' },
+                    show_container: false
+                },
+                methods:{
+                    showOrHide(index) {
+                        this['show' + index] = !this['show' + index]
+                    },
+                    select(index) {
+                        var data, filed, _this = this;
+                        if (index === 1) {
+                            filed = 'isMarry'
+                            data = [
+                                {id: '1', value: '未婚'},
+                                {id: '2', value: '已婚'}
+                            ]
+                        } else if (index === 2) {
+                            filed = 'maxEducation'
+                            data = [
+                                {id: '1', value: '博士'},
+                                {id: '2', value: '硕士'},
+                                {id: '3', value: '本科'},
+                                {id: '4', value: '专科'},
+                                {id: '5', value: '高中'},
+                                {id: '6', value: '初中'},
+                                {id: '7', value: '小学'}
+                            ]
+                        } else if (index === 3) {
+                            filed = 'politicalOutlook'
+                            data = [
+                                {id: '1', value: '党员'},
+                                {id: '2', value: '团员'},
+                                {id: '3', value: '群众'}
+                            ]
+                        }
+                        this.show_container = true;
+                        new IosSelect(1, 
+                            [data],
+                            {
+                                container: '.container',
+                                title: '',
+                                itemHeight: 50,
+                                itemShowCount: 3,
+                                oneLevelId: _this[filed].id,
+                                callback: function (selectOneObj) {
+                                    console.log(selectOneObj);
+                                    _this[filed] = selectOneObj
+                                }
+                            }
+                        );
+
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
